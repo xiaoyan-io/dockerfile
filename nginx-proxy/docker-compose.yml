@@ -1,0 +1,48 @@
+version: "3"
+services:
+  nginx-proxy:
+    image: jwilder/nginx-proxy
+    container_name: nginx-proxy
+    restart: always
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "5"
+        max-size: "50m"
+    ports:
+      - "80:80"
+      - "443:443"
+    labels:
+      - "com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy"
+    volumes:
+      - "./client_max_body_size.conf:/etc/nginx/conf.d/client_max_body_size.conf:ro"
+      - "conf:/etc/nginx/conf.d"
+      - "vhost:/etc/nginx/vhost.d"
+      - "html:/usr/share/nginx/html"
+      - "certs:/etc/nginx/certs"
+      - "/var/run/docker.sock:/tmp/docker.sock:ro"
+
+  letsencrypt-nginx-proxy-companion:
+    image: jrcs/letsencrypt-nginx-proxy-companion
+    container_name: letsencrypt-nginx
+    restart: unless-stopped
+    volumes:
+      - "conf:/etc/nginx/conf.d"
+      - "vhost:/etc/nginx/vhost.d"
+      - "html:/usr/share/nginx/html"
+      - "certs:/etc/nginx/certs"
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+    environment:
+      NGINX_PROXY_CONTAINER: nginx-proxy
+
+volumes:
+  conf:
+  vhost:
+  html:
+  certs:
+
+networks:
+  default:
+    external:
+      name: nginx-proxy
+

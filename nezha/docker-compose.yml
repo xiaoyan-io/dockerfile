@@ -1,0 +1,23 @@
+version: "3.3"
+
+services:
+  dashboard:
+    image: ghcr.io/naiba/nezha-dashboard:${VERSION}
+    restart: always
+    volumes:
+      - ~/nezha/data:/dashboard/data
+      - ~/nezha/static-custom/static:/dashboard/resource/static/custom:ro
+      - ~/nezha/theme-custom/template:/dashboard/resource/template/theme-custom:ro
+      - ~/nezha/dashboard-custom/template:/dashboard/resource/template/dashboard-custom:ro
+    ports:
+      - 5555:5555
+    environment:
+      - VIRTUAL_HOST=${YOUR_DOMAIN}
+      - VIRTUAL_PORT=80
+      - LETSENCRYPT_HOST=${YOUR_DOMAIN}
+      - LETSENCRYPT_EMAIL=${YOUR_EMAIL}
+
+networks:
+  default:
+    name: nginx-proxy
+    external: true
