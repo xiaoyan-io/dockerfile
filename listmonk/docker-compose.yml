@@ -1,0 +1,50 @@
+version: "3.7"
+
+x-app-defaults: &app-defaults
+  restart: unless-stopped
+  image: listmonk/listmonk:latest
+  ports:
+    - "${PORT:-9000}:9000"
+  networks:
+    - listmonk
+  environment:
+    - TZ=${TIMEZONE:-Asia/Shanghai}
+
+x-db-defaults: &db-defaults
+  image: postgres:13
+  ports:
+    - "${DB_PORT:-9432}:5432"
+  networks:
+    - listmonk
+  environment:
+    - POSTGRES_PASSWORD=${DB_PASSWORD}
+    - POSTGRES_USER=${DB_USER}
+    - POSTGRES_DB=${DB_NAME}
+  restart: unless-stopped
+  healthcheck:
+    test: ["CMD-SHELL", "pg_isready -U listmonk"]
+    interval: 10s
+    timeout: 5s
+    retries: 6
+
+services:
+  db:
+    <<: *db-defaults
+    container_name: listmonk_db
+    volumes:
+      - "/etc/localtime:/etc/localtime"
+      - "${LISTMONK_CONFIG}/listmonk-data:/var/lib/postgresql/data"
+
+  app:
+    <<: *app-defaults
+    container_name: listmonk_app
+    depends_on:
+      - db
+    command: "./listmonk --static-dir=/listmonk/static"
+    volumes:
+      - "${LISTMONK_CONFIG}/config.toml:/listmonk/config.toml"
+      - "./static:/listmonk/static"
+
+networks:
+  listmonk:
+

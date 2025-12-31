@@ -1,0 +1,5 @@
+PORT=9000
+DB_PASSWORD=password
+DB_USER=listmonk
+DB_NAME=listmonk
+LISTMONK_CONFIG=~/listmonk

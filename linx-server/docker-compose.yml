@@ -1,0 +1,25 @@
+version: "3"
+
+services:
+  linx-server:
+    image: andreimarcu/linx-server
+    container_name: linx-server
+    restart: always
+    command: -config /data/linx-server.conf
+    volumes:
+      - ${PATH_META}:/data/meta
+      - ${PATH_FILES}:/data/files
+      - ./config.conf:/data/linx-server.conf
+    environment:
+      - TZ=Asia/Shanghai
+      - PUID=1000
+      - PGID=1000
+      - VIRTUAL_HOST=${DOMAIN}
+      - VIRTUAL_PORT=8080
+      - LETSENCRYPT_HOST=${DOMAIN}
+      - LETSENCRYPT_EMAIL=${EMAIL}
+
+networks:
+  default:
+    external: true
+    name: nginx-proxy

@@ -1,0 +1,15 @@
+version: "3"
+services:
+  huginn:
+    image: ghcr.io/huginn/huginn
+    container_name: huginn
+    restart: always
+    ports:
+      - 3000:3000
+    environment:
+      HUGINN_DATABASE_ADAPTER: mysql2
+      MYSQL_PORT_3306_TCP_ADDR: ${MYSQL_PORT_3306_TCP_ADDR}
+      MYSQL_PORT_3306_TCP_PORT: 3306
+      MYSQL_DATABASE: huginn
+      DATABASE_USERNAME: ${DATABASE_USERNAME}
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
