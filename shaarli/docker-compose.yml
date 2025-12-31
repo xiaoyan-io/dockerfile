@@ -1,0 +1,15 @@
+version: '3.3'
+
+services:
+  shaarli:
+    image: shaarli/shaarli:latest
+    container_name: shaarli
+    restart: always
+    volumes:
+      - '${SHAARLI_DATA}/data:/var/www/shaarli/data'
+      - '${SHAARLI_DATA}/cache:/var/www/shaarli/cache'
+
+networks:
+  default:
+    name: nginx-proxy
+    external: true

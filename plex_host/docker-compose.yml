@@ -1,0 +1,21 @@
+version: "3"
+
+services:
+  plex:
+    image: ghcr.io/linuxserver/plex
+    container_name: plex
+    network_mode: host
+    restart: always
+    volumes:
+      - ${PLEX_CONFIG_PATH}/library:/config
+      - ${PATH_TO_MEDIA}:/media:ro
+      - ${PATH_TO_MOVIE}:/movies:ro
+      - ${PATH_TO_TV}:/tv:ro
+      - ${PATH_TO_MUSIC}:/Music:ro
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - VERSION=docker
+      - TZ=Asia/Shanghai
+      - PLEX_CLAIM=${PLEX_CLAIM}
+
