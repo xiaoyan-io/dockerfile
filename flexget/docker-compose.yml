@@ -1,0 +1,19 @@
+version: '3.3'
+
+services:
+  flexget:
+    image: wiserain/flexget
+    restart: always
+    container_name: flexget
+    environment:
+      - PUID=${PUID}
+      - PGID=${PGID}
+      - FG_WEBUI_PASSWD=${PASSWD}
+      - FG_LOG_LEVEL=info
+      - TZ=${TZ}
+    ports:
+      - '${PORT}:5050'
+    volumes:
+      - '${CONFIG_PATH}:/config'
+      - '${DATA_PATH}:/data'
+
